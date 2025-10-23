@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>From Manuscript to Linked Open Data - Improved Workflow</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 60px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-style: italic;
+            color: #666;
+            margin-bottom: 60px;
+            font-size: 16px;
+        }
+        
+        .workflow {
+            position: relative;
+            padding: 20px 0;
+        }
+        
+        .phase-container {
+            margin-bottom: 80px;
+            position: relative;
+        }
+        
+        .phase-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 18px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .phase-label {
+            font-size: 14px;
+            opacity: 0.9;
+            font-weight: normal;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .boxes-row {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            align-items: stretch;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .box {
+            padding: 25px 30px;
+            border-radius: 8px;
+            min-width: 280px;
+            flex: 1;
+            max-width: 400px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .box-data {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+        
+        .box-ai {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        
+        .box-manual {
+            background: linear-gradient(135deg, #ffd89b 0%, #ff9a56 100%);
+            color: #333;
+        }
+        
+        .box-output {
+            background: linear-gradient(135deg, #a8edea 0%, #4fb897 100%);
+            color: white;
+        }
+        
+        .box-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .box-title::before {
+            content: '□';
+            font-size: 20px;
+        }
+        
+        .box-content {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .box-detail {
+            margin: 5px 0;
+        }
+        
+        .arrow {
+            text-align: center;
+            font-size: 36px;
+            color: #667eea;
+            margin: 20px 0;
+        }
+        
+        .side-note {
+            position: absolute;
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 12px 15px;
+            border-radius: 4px;
+            font-size: 13px;
+            max-width: 200px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        
+        .side-note.left {
+            left: -230px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .side-note.right {
+            right: -230px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .stats-box {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 40px 0;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+        
+        .stats-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #495057;
+            font-size: 14px;
+        }
+        
+        .final-output {
+            background: linear-gradient(135deg, #96fbc4 0%, #43e97b 100%);
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            color: #1a5a3a;
+            margin-top: 60px;
+            box-shadow: 0 4px 15px rgba(67, 233, 123, 0.3);
+        }
+        
+        .legend {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .legend-color {
+            width: 40px;
+            height: 25px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .split-paths {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        
+        .path {
+            flex: 1;
+            max-width: 450px;
+        }
+        
+        @media (max-width: 1200px) {
+            .side-note {
+                position: static;
+                transform: none;
+                margin: 15px auto;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>FROM MANUSCRIPT TO LINKED OPEN DATA</h1>
+        <div class="subtitle">The Library of Juan José de Austria: Complete Digital Pipeline</div>
+        
+        <div class="workflow">
+            
+            <!-- PHASE 1 -->
+            <div class="phase-container">
+                <div class="phase-header">
+                    <span class="phase-label">PHASE 1: SOURCE MATERIAL</span>
+                    Digitization
+                </div>
+                <div class="boxes-row">
+                    <div class="box box-data">
+                        <div class="box-title">Historical Manuscript</div>
+                        <div class="box-content">
+                            <div class="box-detail">17th Century Inventory</div>
+                            <div class="box-detail">(207 pages)</div>
+                        </div>
+                    </div>
+                    <div class="box box-data">
+                        <div class="box-title">Digital Scans</div>
+                        <div class="box-content">
+                            <div class="box-detail">High-resolution images</div>
+                            <div class="box-detail">Archival quality</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="side-note right">Process: Scan</div>
+            </div>
+            
+            <div class="arrow">↓</div>
+            
+            <!-- PHASE 2 -->
+            <div class="phase-container">
+                <div class="phase-header">
+                    <span class="phase-label">PHASE 2: TRANSCRIPTION</span>
+                    Handwritten Text Recognition • AI-powered transcription
+                </div>
+                <div class="boxes-row">
+                    <div class="box box-ai">
+                        <div class="box-title">Raw Text Output</div>
+                        <div class="box-content">
+                            <div class="box-detail">697 bibliographic entries</div>
+                            <div class="box-detail">Old Spanish, Latin abbreviations</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="side-note right">Tool: Transkribus</div>
+            </div>
+            
+            <div class="arrow">↓</div>
+            
+            <!-- PHASE 3 -->
+            <div class="phase-container">
+                <div class="phase-header">
+                    <span class="phase-label">PHASE 3: DATA EXTRACTION</span>
+                    Structured data extraction • Title, Author, Date, Place, Format
+                </div>
+                <div class="boxes-row">
+                    <div class="box box-ai">
+                        <div class="box-title">Structured CSV</div>
+                        <div class="box-content">
+                            <div class="box-detail">697 rows × 15 columns</div>
+                            <div class="box-detail">Bibliographic metadata</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="side-note right">Tool: Claude API<br>(Module 1)</div>
+            </div>
+            
+            <div class="arrow">↓</div>
+            
+            <!-- PHASE 4 -->
+            <div class="phase-container">
+                <div class="phase-header">
+                    <span class="phase-label">PHASE 4: QUALITY CONTROL</span>
+                    Validation
+                </div>
+                <div class="split-paths">
+                    <div class="path">
+                        <div class="box box-manual">
+                            <div class="box-title">Validation (Module 2)</div>
+                            <div class="box-content">
+                                <div class="box-detail">✓ Data completeness</div>
+                                <div class="box-detail">✓ Format consistency</div>
+                                <div class="box-detail">✓ Error detection</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="path">
+                        <div class="box box-output">
+                            <div class="box-title">Quality Reports</div>
+                            <div class="box-content">
+                                <div class="box-detail">Statistics</div>
+                                <div class="box-detail">Error flags</div>
+                                <div class="box-detail">Review needed</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="side-note left">Module 2:<br>Quality checks</div>
+            </div>
+            
+            <div class="arrow">↓</div>
+            
+            <!-- PHASE 5 -->
+            <div class="phase-container">
+                <div class="phase-header">
+                    <span class="phase-label">PHASE 5: BIBLIOGRAPHIC ENRICHMENT</span>
+                    Claude AI (Module 3) • Entity extraction • Place/date standardization • Subject classification
+                </div>
+                <div class="boxes-row">
+                    <div class="box box-ai">
+                        <div class="box-title">Enriched Dataset</div>
+                        <div class="box-content">
+                            <div class="box-detail">366 VIAF IDs (52.5%)</div>
+                            <div class="box-detail">Modern identifications</div>
+                            <div class="box-detail">Standardized metadata</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="side-note right">Tool: Claude API<br>(Module 3)<br>+ VIAF API</div>
+                
+                <div class="stats-box">
+                    <div class="stats-title">PROJECT STATISTICS</div>
+                    <div>• Original pages: 207</div>
+                    <div>• Total entries: 697</div>
+                    <div>• VIAF identifications: 366 (52.5%)</div>
+                    <div>• Wikidata links: 128 (18.3%)</div>
+                    <div>• Authors: 366</div>
+                    <div>• Subjects: 2065</div>
+                    <div>• Publication span: 167 years</div>
+                    <div>• Avg entries/page: ~8 hours</div>
+                    <div>• Estimation time: ~8h</div>
+                </div>
+            </div>
+            
+            <div class="arrow">↓</div>
+            
+            <!-- PHASE 6 -->
+            <div class="phase-container">
+                <div class="phase-header">
+                    <span class="phase-label">PHASE 6: WIKIDATA INTEGRATION</span>
+                </div>
+                <div class="split-paths">
+                    <div class="path">
+                        <div class="box box-ai">
+                            <div class="box-title">Automated Lookup (Module 4.3)</div>
+                            <div class="box-content">
+                                <div class="box-detail">Wikidata SPARQL</div>
+                                <div class="box-detail">VIAF → QID mapping</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="path">
+                        <div class="box box-manual">
+                            <div class="box-title">Manual Enhancement</div>
+                            <div class="box-content">
+                                <div class="box-detail">Top 50 authors</div>
+                                <div class="box-detail">Verified identifications</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="side-note left">Module 4.3:<br>Wikidata enrichment</div>
+            </div>
+            
+            <div class="arrow">↓</div>
+            
+            <!-- Ready for LOD -->
+            <div class="phase-container">
+                <div class="boxes-row">
+                    <div class="box box-output" style="flex: 1; max-width: 600px;">
+                        <div class="box-title">Linked Data Ready</div>
+                        <div class="box-content">
+                            <div class="box-detail">128 Wikidata QIDs</div>
+                            <div class="box-detail">Authors, Places, Works</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow">↓</div>
+            
+            <!-- PHASE 7 -->
+            <div class="phase-container">
+                <div class="phase-header">
+                    <span class="phase-label">PHASE 7: LINKED OPEN DATA GENERATION</span>
+                    LOD Converter (Module 4) • Schema.org vocabulary • VIAF + Wikidata links
+                </div>
+                <div class="boxes-row">
+                    <div class="box box-output">
+                        <div class="box-title">RDF/Turtle File</div>
+                        <div class="box-content">
+                            <div class="box-detail">jja_library.ttl</div>
+                            <div class="box-detail">FAIR-compliant LOD</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="side-note right">Module 4:<br>RDF generation</div>
+            </div>
+            
+            <div class="arrow">↓</div>
+            
+            <!-- PHASE 8 -->
+            <div class="phase-container">
+                <div class="phase-header">
+                    <span class="phase-label">PHASE 8: DEPLOYMENT & ACCESS</span>
+                    DOI assigned • Long-term preservation
+                </div>
+                <div class="boxes-row">
+                    <div class="box box-output">
+                        <div class="box-title">SPARQL Endpoint</div>
+                        <div class="box-content">
+                            <div class="box-detail">Apache Jena Fuseki</div>
+                            <div class="box-detail">Interactive queries</div>
+                        </div>
+                    </div>
+                    <div class="box box-output">
+                        <div class="box-title">Visualizations</div>
+                        <div class="box-content">
+                            <div class="box-detail">Networks, charts</div>
+                            <div class="box-detail">Presentation ready</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- FINAL OUTPUT -->
+            <div class="final-output">
+                FINAL OUTPUT: Open Science Dataset<br>
+                <span style="font-size: 15px; font-weight: normal; display: block; margin-top: 10px;">
+                697 works | 366 VIAF | 128 Wikidata | FAIR-compliant | EU Open Data compatible
+                </span>
+            </div>
+            
+            <!-- LEGEND -->
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+                    <span>Data/Files</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"></div>
+                    <span>AI Processing</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(135deg, #ffd89b 0%, #ff9a56 100%);"></div>
+                    <span>Manual Work</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(135deg, #a8edea 0%, #4fb897 100%);"></div>
+                    <span>Output/Results</span>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</body>
+</html>
